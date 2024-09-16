@@ -1,0 +1,114 @@
+{% load socialaccount %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report List</title>
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <style>
+        .description {
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    {% include 'header.html' %}
+    <div class="container mt-4">
+        <h2>{{report.subject}}</h2>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Report Details</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col"><strong>Whistleblower</strong></div>
+                        <div class="col">{{ report.whistleblower|title }}</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col"><strong>Date Published</strong></div>
+                        <div class="col">{{ report.date_time }}</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col"><strong>Status</strong></div>
+                        <div class="col">{{ report.status }}</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col"><strong>Medical Practice</strong></div>
+                        <div class="col"><a href="{% url 'MediGuard:practice_detail' report.practice.id %}">{{ report.practice }}</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Files Submitted</strong>
+                </div>
+                <div class="card-body">
+                    {% if files %}
+                        <ul>
+                            {% for f in files %}
+                                <li><a href="{{ f.file.url }}">{{ f.file }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No files submitted for this report</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Description</strong>
+                </div>
+                <div class="card-body">
+                    {{ report.description }}
+                </div>
+            </div>
+        </div>
+        {% if report.status == 'Resolved' %}
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Resolution Notes</strong>
+                        </div>
+                        <div class="card-body">
+                            {{ report.notes }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+</div>
+    {% if report.status == 'Resolved' %}
+    <div class="container-fluid mt-4">
+        <p>Report has been resolved.</p>
+    </div>
+    {% else %}
+    {% if is_siteAdmin %}
+    <div class="container-fluid mt-4">
+        <h3>Update Status</h3>
+        <form action="{% url 'MediGuard:report_detail' report.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-primary">Resolve</button>
+        </form>
+    </div>
+    {% endif %}
+    {% endif %}
+</body>
+<footer style="margin-top: 15px; bottom:0; position:relative; width:100%">
+        {% include 'footer.html' %}
+</footer>
+</html>

@@ -1,0 +1,64 @@
+{% load socialaccount %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report List</title>
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <style>
+        .description {
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    {% include 'header.html' %}
+    <div style="padding-left: 15px; padding-right: 15px;">
+        <h1>{{ practice.name }}</h1>
+        <p>{{ practice.address }}, {{ practice.city }}, {{ practice.state }}, {{ practice.zipcode }}</p>
+        <p>{{ practice.phone }}</p>
+        <p>{{ practice.website }}</p>
+
+        <h2>Reports</h2>
+        <p style="font-size: 16px; margin-top: 10px;">Total Reports for this Practice: <strong>{{ count }}</strong></p>
+        {% if not is_siteAdmin %}
+            <p style="font-size: 16px; margin-top: 10px;">Details of reports from other users only available to site admin.</p>
+        {% endif %}
+        <div class="row">
+            {% for report in reports %}
+                {% if is_siteAdmin or report.whistleblower == user %}
+                    <div class="col-md-4 mb-3">
+                        <a href="{% url 'MediGuard:report_detail' report.id %}" style="color:black; text-decoration: none">
+                            <div class="card" style="cursor: pointer; transition: box-shadow 0.3s, transform 0.3s;"
+                                 onmouseover="this.style.boxShadow='0 4px 8px rgba(3, 138, 255)'; this.style.transform='scale(1.03)';"
+                                 onmouseout="this.style.boxShadow='none'; this.style.transform='scale(1)';">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ report.subject|truncatechars:50 }}</h5>
+                                    <p class="card-text"><strong>Date Published: </strong>{{ report.date_time }}</p>
+                                    <p class="card-text"><strong>Status: </strong>{{ report.status }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+                {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                    </div><div class="row">
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if reports|length == 0 %}
+            <p>There are no reports available at this time</p>
+        {% endif %}
+    </div>
+    <footer style="margin-top: 15px; bottom:0; position:relative; width:100%">
+        {% include 'footer.html' %}
+    </footer>
+</body>
+</html>
+
+

@@ -1,0 +1,38 @@
+/* styles.css */
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-container h1 {
+    margin-right: 10px;
+}
+
+
+.dropdown-menu li.account-item {
+  margin-top: 5px; 
+} 
+
+.dropdown-menu li.logout-item {
+  margin-top: 15px; 
+}
+
+
+.center-link {
+  position: fixed;
+  top: 12%; /* Adjust based on where you want the top of the element */
+  left: 50%; /* Adjust based on where you want the left of the element */
+  transform: translate(-50%, -50%); /* Center the element */
+  /* max-width: 90%; */
+}
+
+.dropdown-menu {
+  padding: 10px;
+  min-width: 120px;
+  padding-left: 20px;
+  text-align: left;
+  /* left: 0; */
+}
+
+

@@ -1,0 +1,24 @@
+{% load socialaccount %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+</head>
+<body style="text-align: center">
+    <h1>Login to MediGuard</h1>
+    {% if user.is_authenticated %}
+        <p>Welcome, You are logged in as {{ user.username }}</p>
+    {% else %}
+    <a class="btn btn-outline-dark" href="{% provider_login_url 'google' action='reauthenticate' %}" role="button" style="text-transform:none; margin-top:15px">
+      <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" />
+      Login with Google
+    </a>
+    {% endif %}
+</body>
+<footer class="footer fixed-bottom">
+    {% include 'footer.html' %}
+</footer>
+</html>

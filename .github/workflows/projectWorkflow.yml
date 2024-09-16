@@ -1,0 +1,58 @@
+name: Project Workflow CI
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Setup AWS Credentials
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        echo "Setting up AWS credentials"
+        # The commands here are just for illustration. Typically, you wouldn't echo secrets.
+        # You might not need to do anything explicitly if your application automatically
+        # picks up these environment variables.
+    - name: Run migrations
+      run: |
+        python manage.py migrate
+    - name: Run Anonymous tests
+      run: python manage.py test MediGuard.tests.AnonymousTests
+    - name: Run Common User tests
+      run: python manage.py test MediGuard.tests.CommonUserTests
+    - name: Run Site Admin tests
+      run: python manage.py test MediGuard.tests.SiteAdminTests
+
+

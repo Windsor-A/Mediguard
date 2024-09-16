@@ -1,0 +1,93 @@
+{% load static %}
+{% load socialaccount %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Report</title>
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="container mt-5">
+        <h1>Submit Report</h1>
+        <p>Please include details regarding your medical malpractice incident. You may additionally upload any supporting documentation/files below.</p>
+        {% if error_message %}
+        <p class="text-danger">{{ error_message }}</p>
+        {% endif %}
+        <form action="{% url 'MediGuard:report' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form report_form %}
+        <input type="file" name="file" id="file-id" multiple class="form-control-file mt-3">
+        <div class="mt-4">
+            <h2>Medical Practice Information</h2>
+            <p>Please include information about the hospital/practice/facility most closely associated with your report</p>
+            {% if practice_form.non_field_errors %}
+                <p class="text-danger">{{ practice_form.non_field_errors.as_text }}</p>
+            {% endif %}
+            {% if practice_form.errors %}
+                {% for field in practice_form %}
+                    {% for error in field.errors %}
+                        <div class="text-danger">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+            {{ practice_form.existing_practices.label_tag }}
+            {{ practice_form.existing_practices }}
+        </div>
+        {% if practice_form.existing_practices.value == None %}
+            <div id="additional-fields" style="display: block; margin-top: 20px;">
+                <div class="mb-3">
+                    {{ practice_form.new_practice.label_tag }}
+                    {{ practice_form.new_practice }}
+                </div>
+                <div class="mb-3">
+                    {{ practice_form.state.label_tag }}
+                    {{ practice_form.state }}
+                </div>
+                <div class="mb-3">
+                    {{ practice_form.city.label_tag }}
+                    {{ practice_form.city }}
+                </div>
+                <div class="mb-3">
+                    {{ practice_form.zipcode.label_tag }}
+                    {{ practice_form.zipcode }}
+                </div>
+                <div class="mb-3">
+                    {{ practice_form.address.label_tag }}
+                    {{ practice_form.address }}
+                </div>
+                <div class="mb-3">
+                    {{ practice_form.phone.label_tag }}
+                    {{ practice_form.phone }}
+                </div>
+                <div class="mb-3">
+                    {{ practice_form.website.label_tag }}
+                    {{ practice_form.website }}
+                </div>
+            </div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary mt-4">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('id_existing_practices').addEventListener('change', function() {
+            var newPracticeFields = document.getElementById('additional-fields');
+            if (this.value === '') {
+                newPracticeFields.style.display = 'block';
+            } else {
+                newPracticeFields.style.display = 'none';
+            }
+        });
+    </script>
+    <br><br>
+    {% include 'footer.html' %}
+</body>
+</html>

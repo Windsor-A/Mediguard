@@ -1,0 +1,41 @@
+{% load socialaccount %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+ <html lang="en">
+<link rel="stylesheet" href="{% static 'nav.css' %}">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Homepage</title>
+</head>
+
+<body class="bg-light">
+    {% include 'header.html' %}
+
+ <div class="container mt-5" id="report-link">
+        <p>If you have witnessed or experienced any form of medical malpractice, please use the button below to report it:</p>
+        <a href="{% url 'MediGuard:report' %}" class="btn btn-primary">Report Now</a>
+ </div>
+
+ <main class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-primary shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-primary text-center">Support</h2>
+                    <p class="card-text text-center">For any inquiries or assistance on what constitutes malpractice, please don't hesitate to contact us.</p>
+                    <p class="card-text text-center">For support, please call: <strong>(123) 456-7890</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+ </main>
+
+</body>
+   <footer class="footer fixed-bottom">
+        {% include 'footer.html' %}
+   </footer>
+</html>

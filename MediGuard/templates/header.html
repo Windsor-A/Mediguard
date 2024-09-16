@@ -1,0 +1,48 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <link rel="stylesheet" href="{% static 'header.css' %}">
+</head>
+<body>
+    <header class="header sticky-top bg-primary py-3">
+        <div class="container-fluid">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-auto logo-container">
+                    <a href="{% url 'MediGuard:home_page' %}">
+                        <img src="{% static 'images/MediGuard Logo Correct.png' %}" alt="MediGuardLogo" style="height: 125px; width: 125px;">
+                    </a>
+                    <h1><a class="text-white mb-0" id="home-link" href="{% url 'MediGuard:home_page' %}">MediGuard</a></h1>
+                </div>
+                {% if is_siteAdmin %}
+                <div class="col-auto center-link">
+                    <h2><a class="text-white mb-0" id="reportlist-link" href="{% url 'MediGuard:report_list' %}">View All Reports</a></h2>
+                </div>
+                {% endif %}
+                <div class="col-auto">
+                    {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="account-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ user.username|title }}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="account-dropdown">
+                            <li class="account-item">
+                                <a class="btn-primary btn-sm active" href="{% url 'MediGuard:user_dashboard' %}">My Account</a>
+                            </li>
+                            <li class="logout-item"><form action="{% url 'MediGuard:logout' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Logout</button>
+                            </form></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'MediGuard:login' %}" class="btn btn-light">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+</body>
+</html>
