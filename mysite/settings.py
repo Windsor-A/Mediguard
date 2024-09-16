@@ -140,7 +140,6 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'APP': {
             'client_id': '937163182869-595p36fa1ej0fnt5lgohur1i59vgt61d.apps.googleusercontent.com',
-            'secret': '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',
             'redirect_uris': ['http://127.0.0.1:8000//google/login/callback',
                               'https://medi-guard-cd00e1ea7845.herokuapp.com/accounts/google/login/callback/'],
             'key': '',
